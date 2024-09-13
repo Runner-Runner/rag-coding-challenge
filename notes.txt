@@ -46,8 +46,8 @@ Tasks:
 	- To ensure all necessary prerequisites are provided
 	[x] Create script to create venv "venv_cc" in which the code should run
 [] Test result on low-power laptop
-[] Write test suite
-	[] 4 base queries
+[x] Write test suite
+	[x] 4 base queries
 	[] extensive (per doc)
 
 Problems:
@@ -62,9 +62,11 @@ Problems:
 	[] Test other quantizations
 		- llama-2-13b-german-assistant-v4.Q3_K_L.gguf
 		- llama-2-13b-german-assistant-v4.Q8_0.gguf
+	- Answer quality generally fluctuating strongly, maybe bad configuration.
 [] Retrieval using FAISS doesn't work well enough
 	- Doesn't return the relevant doc even for long unique identifiers (like 4008321299963)
 		- Not suited for small datasets??
+			- Using Flat for highest accuracy
 	- Maybe PDF text/document must be preprocessed differently?
 
 Links:

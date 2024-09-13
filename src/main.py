@@ -12,6 +12,7 @@ from langchain_core.output_parsers import StrOutputParser
 from llama_cpp import Llama
 
 import prepare_context_data
+import test
 
 
 class Timer:
@@ -44,7 +45,8 @@ def run_rag():
 
     model = Llama(model_path=model_path)
 
-    db = prepare_context_data.create_pdf_db(context_data_dir, embedding_model_name)
+    vector_store = prepare_context_data.create_pdf_db(context_data_dir, embedding_model_name)
+    test.test_base_query_similarities(vector_store)
 
     user_query = "Welche Leuchte hat SCIP Nummer dd2ddf15-037b-4473-8156-97498e721fb3?"
 
@@ -53,14 +55,14 @@ def run_rag():
     # <</SYS>>
     # {user_message} [/INST]"""
 
-    output = ask(model, db, user_query)
+    output = ask(model, vector_store, user_query)
     print(output)
 
     while True:
-        input_user_message = input("Frage: ")
-        if input_user_message == 'q':
+        input_user_query = input("Frage: ")
+        if input_user_query == 'q':
             break
-        output = ask(model, db, user_query)
+        output = ask(model, vector_store, input_user_query)
         print(output)
 
 
@@ -74,6 +76,7 @@ def ask(model, db, user_query):
 
     # TODO Maybe use the most relevant X contents?
     context = relevant_docs[0].page_content
+    context = "XBO 3000 W/HS XL OFR: SCIP Deklarationsnummer dd2ddf15-037b-4473-8156-97498e721fb3 | c331ba5b-e29f-4e83-9bdd-095d344154b8"
 
     # TODO Probably not the right format yet for this model ...
     prompt_template = '### User: {user_message}\n### Assistant: {system_message}'
