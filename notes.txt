@@ -17,7 +17,7 @@ Questions:
 		[] Case shouldn't be relevant, convert to lowercase if necessary?
 	
 Tasks:
-[x] Generelle Analyse PDFs:
+[x] General Analysis PDFs:
 	[x] First approach, just toss in file text as context and try it out?
 	- Lists in file text are probably good enough as is
 	- Contains key value pairs horizontally and vertically paired, might need explicit markings? (Not sure if typical in RAG preprocessing)
@@ -44,6 +44,7 @@ Tasks:
 		[] Connect vertical table? (very specific fix ...)
 [] Test result from scratch 
 	- To ensure all necessary prerequisites are provided
+	[x] Create script to create venv "venv_cc" in which the code should run
 [] Test result on low-power laptop
 [] Write test suite
 	[] 4 base queries
@@ -57,6 +58,14 @@ Problems:
 		- https://huggingface.co/flozi00/Llama-2-13b-german-assistant-v4
 		-> https://huggingface.co/TheBloke/Llama-2-13B-German-Assistant-v4-GGUF
 [] "Llama.generate: 9 prefix-match hit, remaining 66 prompt tokens to eval" - is this indicating a wrong configuration?
+[] Answer quality of llama-2-13b-german-assistant-v4.Q2_K.gguf might not be good enough
+	[] Test other quantizations
+		- llama-2-13b-german-assistant-v4.Q3_K_L.gguf
+		- llama-2-13b-german-assistant-v4.Q8_0.gguf
+[] Retrieval using FAISS doesn't work well enough
+	- Doesn't return the relevant doc even for long unique identifiers (like 4008321299963)
+		- Not suited for small datasets??
+	- Maybe PDF text/document must be preprocessed differently?
 
 Links:
 - https://learnbybuilding.ai/tutorials/rag-from-scratch

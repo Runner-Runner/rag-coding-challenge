@@ -1,0 +1,11 @@
+Wie viel wiegt XBO 4000 W/HS XL OFR?
+- Richtige Antwort: 1022,90g (ZMP_1007199_XBO_4000_W_HS_XL_OFR.pdf)
+
+Welche Leuchte hat SCIP Nummer dd2ddf15-037b-4473-8156-97498e721fb3?
+- Richtige Antwort: XBO 3000 W/HS XL OFR (ZMP_1007193_XBO_3000_W_HS_XL_OFR.pdf)
+
+Welche Leuchte hat die Erzeugnissnummer 4008321299963?
+- Richtige Antwort: XBO 2500 W/HS XL OFR (ZMP_1007189_XBO_2500_W_HS_XL_OFR.pdf)
+
+Gebe mir alle Leuchtmittel mit mindestens 1500W und einer Lebensdauer von mehr als 3000 Stunden?
+- Richtige Antwort: ZMP_1007179_XBO_1600_W_XL_OFR.pdf, ZMP_1007184_XBO_2000_W_H_XL_OFR.pdf, ZMP_1007187_XBO_2000_W_HTP_XL_OFR.pdf

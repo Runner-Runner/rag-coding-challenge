@@ -33,7 +33,9 @@ class Timer:
 
 
 def run_rag():
-    model_name = 'llama-2-13b-german-assistant-v4.Q2_K.gguf'
+    # model_name = 'llama-2-13b-german-assistant-v4.Q2_K.gguf'
+    # model_name = 'llama-2-13b-german-assistant-v4.Q3_K_L.gguf'
+    model_name = 'llama-2-13b-german-assistant-v4.Q8_0.gguf'
     model_path = os.path.join('..', 'model', model_name)
 
     context_data_dir = 'pdf'
@@ -65,7 +67,7 @@ def run_rag():
 def ask(model, db, user_query):
     system_message_template = ("Du bist ein Assistent, der prägnante, nicht ausschweifende Antworten gibt. "
                                "Hier ist der Kontext für deine Antwort: \"{context}\"")
-    max_tokens = 400
+    max_tokens = 200
 
     with Timer("Retrieval"):
         relevant_docs = db.similarity_search(user_query)
@@ -77,7 +79,7 @@ def ask(model, db, user_query):
     prompt_template = '### User: {user_message}\n### Assistant: {system_message}'
     prompt = prompt_template.format(user_message=user_query, system_message=system_message_template.format(
         context=context))
-    print("Question sent: \n{}".format(prompt))
+    print("Query-Format: \n{}".format(prompt))
 
     with Timer("Inferenz"):
         output = model(prompt, max_tokens=max_tokens, echo=False)
