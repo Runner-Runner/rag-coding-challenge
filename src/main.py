@@ -44,39 +44,44 @@ def run_rag():
 
     db = prepare_context_data.create_pdf_db(context_data_dir, embedding_model_name)
 
-    system_message = ("Du bist ein Assistent, der prägnante, nicht ausschweifende Antworten gibt. "
-                      "Hier ist der Kontext für deine Antwort: {context}")
-    max_tokens = 200
-
-    user_message = "Welche Leuchte hat SCIP Nummer dd2ddf15-037b-4473-8156-97498e721fb3?"
-    relevant_docs = db.similarity_search(user_message)
-    context = relevant_docs[0].page_content
+    user_query = "Welche Leuchte hat SCIP Nummer dd2ddf15-037b-4473-8156-97498e721fb3?"
 
     # prompt_template = """[INST] <<SYS>>
     # {system_message}
     # <</SYS>>
     # {user_message} [/INST]"""
 
-    # TODO Probably not the right format yet for this model ...
-    prompt_template = '### User: {user_message}\n### Assistant: {system_message}'
-
-    prompt = prompt_template.format(user_message=user_message, system_message=system_message.format(context=context))
-    # prompt = prompt_template.format(system_message=system_message, user_message=user_message)
-    output = ask(model, prompt, max_tokens)
+    output = ask(model, db, user_query)
     print(output)
 
     while True:
         input_user_message = input("Frage: ")
         if input_user_message == 'q':
             break
-        prompt = prompt_template.format(system_message=system_message, user_message=input_user_message)
-        output = ask(model, prompt, max_tokens)
+        output = ask(model, db, user_query)
         print(output)
 
 
-def ask(model, prompt, max_tokens):
+def ask(model, db, user_query):
+    system_message_template = ("Du bist ein Assistent, der prägnante, nicht ausschweifende Antworten gibt. "
+                               "Hier ist der Kontext für deine Antwort: \"{context}\"")
+    max_tokens = 400
+
+    with Timer("Retrieval"):
+        relevant_docs = db.similarity_search(user_query)
+
+    # TODO Maybe use the most relevant X contents?
+    context = relevant_docs[0].page_content
+
+    # TODO Probably not the right format yet for this model ...
+    prompt_template = '### User: {user_message}\n### Assistant: {system_message}'
+    prompt = prompt_template.format(user_message=user_query, system_message=system_message_template.format(
+        context=context))
+    print("Question sent: \n{}".format(prompt))
+
     with Timer("Inferenz"):
         output = model(prompt, max_tokens=max_tokens, echo=False)
+    print("Antwort: {}".format(output['choices'][0]['text']))
     return output
 
 

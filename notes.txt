@@ -54,6 +54,8 @@ Problems:
 	- llama_cpp_python is much faster even on CPU
 	- Use quantized .gguf models
 		- E.g. llama-2-13b-german-assistant-v4.Q2_K.gguf, Llama2 for German
+		- https://huggingface.co/flozi00/Llama-2-13b-german-assistant-v4
+		-> https://huggingface.co/TheBloke/Llama-2-13B-German-Assistant-v4-GGUF
 [] "Llama.generate: 9 prefix-match hit, remaining 66 prompt tokens to eval" - is this indicating a wrong configuration?
 
 Links:
