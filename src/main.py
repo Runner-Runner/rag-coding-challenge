@@ -67,21 +67,21 @@ def run_rag():
 
 
 def ask(model, db, user_query):
-    system_message_template = ("Du bist ein Assistent, der prägnante, nicht ausschweifende Antworten gibt. "
-                               "Hier ist der Kontext für deine Antwort: \"{context}\"")
     max_tokens = 200
 
     with Timer("Retrieval"):
         relevant_docs = db.similarity_search(user_query)
 
     # TODO Maybe use the most relevant X contents?
-    context = relevant_docs[0].page_content
-    context = "XBO 3000 W/HS XL OFR: SCIP Deklarationsnummer dd2ddf15-037b-4473-8156-97498e721fb3 | c331ba5b-e29f-4e83-9bdd-095d344154b8"
+    relevant_doc = relevant_docs[0]
+    # Add product name manually extracted from file name
+    # Expect file name to contain product name after two _
+    file_name = os.path.splitext(os.path.basename(relevant_doc.metadata['source']))[0]
+    product_name = " ".join(file_name.split('_')[2:])
+    context = 'Produktdatenblatt {}: {}'.format(product_name, relevant_doc.page_content)
 
-    # TODO Probably not the right format yet for this model ...
-    prompt_template = '### User: {user_message}\n### Assistant: {system_message}'
-    prompt = prompt_template.format(user_message=user_query, system_message=system_message_template.format(
-        context=context))
+    prompt_template = "{user_message} Nutze ausschließlich den folgenden Kontext für deine Antwort: \"{context}\""
+    prompt = prompt_template.format(user_message=user_query, context=context)
     print("Query-Format: \n{}".format(prompt))
 
     with Timer("Inferenz"):

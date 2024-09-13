@@ -37,8 +37,7 @@ Tasks:
 		- Also orders some blocks wrongly ...
 	[] Sanitization
 		[] Maybe requires a manual fix of the block order?
-			- Der Titel ist an falscher Stelle, nach unten verrutscht. Der Rest scheint richtig angeordnet zu sein (oben nach unten).
-			- ZMP_55877_XBO_4000_W_HSA_OFR.pdf: Anwendungsgebiete ist ebenfalls nach unten gerutscht, was aber vermutlich semantisch (und zur Bewertung der Relevanz) keinen Unterschied machen sollte.
+			- Title (product name) is in the wrong order in every doc. Is the title handled in a special way? Higher "weight"?
 		[] Remove all _ (misread -)?
 		[] Lowercase everything? (Or can that be done somewhere more "high-level"?
 		[] Connect vertical table? (very specific fix ...)
@@ -68,6 +67,9 @@ Problems:
 		- Not suited for small datasets??
 			- Using Flat for highest accuracy
 	- Maybe PDF text/document must be preprocessed differently?
+	- Embeddings for German language not good enough?
+		- paraphrase-multilingual-MiniLM-L12-v2
+		- FAISS vectorization also tested with english version of PDF documents, no significant improvement
 
 Links:
 - https://learnbybuilding.ai/tutorials/rag-from-scratch
