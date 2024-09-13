@@ -1,0 +1,8 @@
+*.pdf
+*.gguf
+*.bin
+*.model
+*.zip
+venv_*
+.idea
+__pycache__
