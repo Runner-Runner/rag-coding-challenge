@@ -1,0 +1,75 @@
+Questions:
+[] Vectorize?
+[] Which similarity measure to use? Library function? Part of vectorizing algorithm?
+[] Which LLM to use?
+	[x] Must be running locally on CPU? Is that even feasible with decent runtime?
+		- Would be probably feasible, but I am also allowed to use a hosted model.
+	- Must be able to know German. (or include translation step ...)
+	- DiscoResearch/Llama3-DiscoLeo-Instruct-8B-v0.1-4bit-awq
+		- awq not supported without GPU
+- Embeddings:
+	- FAISS PyPDF loader gives surprisingly poor performance out of the box. Doc splits seem logical. Did I choose a bad setting somewhere?
+		- For questions containing an exact long ID string, I would it expect to return the right result at least in the top 4 every time.
+		- https://www.youtube.com/watch?v=sKyvsdEv6rk
+			- "In depth" explanation of FB AI Similarity Search (FAISS)
+		- https://github.com/facebookresearch/faiss/wiki/Guidelines-to-choose-an-index
+		- https://medium.com/loopio-tech/how-to-use-faiss-to-build-your-first-similarity-search-bf0f708aa772
+		[] Case shouldn't be relevant, convert to lowercase if necessary?
+	
+Tasks:
+[x] Generelle Analyse PDFs:
+	[x] First approach, just toss in file text as context and try it out?
+	- Lists in file text are probably good enough as is
+	- Contains key value pairs horizontally and vertically paired, might need explicit markings? (Not sure if typical in RAG preprocessing)
+		- Especially vertically, because reading linewise means all keys are in one row and all values in another in that case, probably lost context?
+	- Should blocks be connected to (document) title?
+	- Must title be treated as special?
+[] Convert PDFs to fitting format
+	[] Provide script to replicate steps, in case the relevant corpus is extended or changed.
+	- pypdf
+		- Sufficient quality but dimensions SLOWER than other solutions like tika. BUT: can be run purely in python.
+		- This is fast enough, but extraction makes mistakes; the order of text blocks seems randomly switched, and order seems highly important for relevancy evaluation.
+		- langchain lib even has a PyPDFLoader/PyPDFDirectoryLoader to vectorize the context data directly
+			- https://python.langchain.com/v0.1/docs/modules/data_connection/document_loaders/pdf/
+			[] Maybe class UnstructuredPDFLoader is helpful for the shifted title problem?
+	- Tika
+		- Using Java Runtime
+		- Also orders some blocks wrongly ...
+	[] Sanitization
+		[] Maybe requires a manual fix of the block order?
+			- Der Titel ist an falscher Stelle, nach unten verrutscht. Der Rest scheint richtig angeordnet zu sein (oben nach unten).
+			- ZMP_55877_XBO_4000_W_HSA_OFR.pdf: Anwendungsgebiete ist ebenfalls nach unten gerutscht, was aber vermutlich semantisch (und zur Bewertung der Relevanz) keinen Unterschied machen sollte.
+		[] Remove all _ (misread -)?
+		[] Lowercase everything? (Or can that be done somewhere more "high-level"?
+		[] Connect vertical table? (very specific fix ...)
+[] Test result from scratch 
+	- To ensure all necessary prerequisites are provided
+[] Test result on low-power laptop
+[] Write test suite
+	[] 4 base queries
+	[] extensive (per doc)
+
+Problems:
+[x] LLMs are way too slow locally without GPU
+	- llama_cpp_python is much faster even on CPU
+	- Use quantized .gguf models
+		- E.g. llama-2-13b-german-assistant-v4.Q2_K.gguf, Llama2 for German
+[] "Llama.generate: 9 prefix-match hit, remaining 66 prompt tokens to eval" - is this indicating a wrong configuration?
+
+Links:
+- https://learnbybuilding.ai/tutorials/rag-from-scratch
+- (https://arxiv.org/abs/2005.11401)
+- https://www.markhneedham.com/blog/2023/06/23/hugging-face-run-llm-model-locally-laptop/
+	-> Very outdated, langchain was significantly overhauled since 2023
+- https://huggingface.co/learn/cookbook/rag_zephyr_langchain
+- Huggingface OS LLM leader board:
+	- https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard
+- https://medium.com/@penkow/how-to-run-llama-2-locally-on-cpu-docker-image-731eae6398d1
+	- Using LLM running locally on CPU
+	- llama-cpp-python??
+	- pip install llama-cpp-python --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
+	- German llama gguf version: https://huggingface.co/TheBloke/Llama-2-13B-German-Assistant-v4-GGUF
+- https://discuss.huggingface.co/t/rag-embeddings-german-language/60840/3
+	- German embeddings
+- https://docs.llamaindex.ai/en/stable/examples/embeddings/huggingface/
+	- Completely different "holistic" alternative, probably no time to test it out

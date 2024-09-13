@@ -90,7 +90,7 @@ def create_pdf_db(context_data_dir, embedding_model_name):
     )
     vector_store.add_documents(documents=docs)
 
-    test_base_query_similarities(vector_store)
+    # test_base_query_similarities(vector_store)
 
     return db
 
