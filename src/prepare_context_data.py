@@ -9,6 +9,8 @@ from pypdf import PdfReader
 from tika import parser
 from langchain_community.document_loaders import PyPDFDirectoryLoader
 
+import test
+
 
 def read_pdf_tika(pdf_file_path):
     # Requires Java runtime installed!
