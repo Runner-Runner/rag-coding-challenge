@@ -38,8 +38,8 @@ Tasks:
 	[] Sanitization
 		[] Maybe requires a manual fix of the block order?
 			- Title (product name) is in the wrong order in every doc. Is the title handled in a special way? Higher "weight"?
-		[] Remove all _ (misread -)?
-		[] Lowercase everything? (Or can that be done somewhere more "high-level"?
+		[x] Remove all _ (misread -)
+		[] Lowercase everything? (Or can that be done somewhere more "high-level"?)
 		[] Connect vertical table? (very specific fix ...)
 [] Test result from scratch 
 	- To ensure all necessary prerequisites are provided
@@ -70,6 +70,10 @@ Problems:
 	- Embeddings for German language not good enough?
 		- paraphrase-multilingual-MiniLM-L12-v2
 		- FAISS vectorization also tested with english version of PDF documents, no significant improvement
+	[x] Try to split into sentence-wise chunks
+		- Improves retrieval results, seems to work well for non-running key-value-based text
+		<-> Obviously increases problem with vertically-paired tables
+	[] Try (additional) naive TF-IDF similarity approach as baseline?
 
 Links:
 - https://learnbybuilding.ai/tutorials/rag-from-scratch

@@ -1,14 +1,5 @@
 import os
 import time
-from getpass import getpass
-from langchain_community.document_loaders import GitHubIssuesLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig, AutoModelForSeq2SeqLM
-from langchain_huggingface import HuggingFacePipeline
-from langchain.prompts import PromptTemplate
-from transformers import pipeline
-from langchain_core.output_parsers import StrOutputParser
 from llama_cpp import Llama
 
 import prepare_context_data
@@ -34,9 +25,9 @@ class Timer:
 
 
 def run_rag():
-    # model_name = 'llama-2-13b-german-assistant-v4.Q2_K.gguf'
+    model_name = 'llama-2-13b-german-assistant-v4.Q2_K.gguf'
     # model_name = 'llama-2-13b-german-assistant-v4.Q3_K_L.gguf'
-    model_name = 'llama-2-13b-german-assistant-v4.Q8_0.gguf'
+    # model_name = 'llama-2-13b-german-assistant-v4.Q8_0.gguf'
     model_path = os.path.join('..', 'model', model_name)
 
     context_data_dir = 'pdf'
@@ -49,11 +40,6 @@ def run_rag():
     test.test_base_query_similarities(vector_store)
 
     user_query = "Welche Leuchte hat SCIP Nummer dd2ddf15-037b-4473-8156-97498e721fb3?"
-
-    # prompt_template = """[INST] <<SYS>>
-    # {system_message}
-    # <</SYS>>
-    # {user_message} [/INST]"""
 
     output = ask(model, vector_store, user_query)
     print(output)
