@@ -3,9 +3,9 @@ import os
 from langchain_community.vectorstores import FAISS
 
 
-def test_base_query_similarities(vector_store: FAISS):
+def test_base_simple_queries(vector_store: FAISS):
     # English version
-    labeled_queries = [
+    base_queries = [
         ("Wie viel wiegt XBO 4000 W/HS XL OFR?",
          'ZMP_1007199_XBO_4000_W_HS_XL_OFR.pdf',
          '1022,90 g'),
@@ -16,11 +16,15 @@ def test_base_query_similarities(vector_store: FAISS):
          'ZMP_1007189_XBO_2500_W_HS_XL_OFR.pdf',
          '4008321299963'),
     ]
-    total_count = len(labeled_queries)
+    output_test_query_similarities(vector_store, base_queries)
+
+
+def output_test_query_similarities(vector_store: FAISS, queries):
+    total_count = len(queries)
     best_hit_count = 0
     top4_hit_count = 0
     content_hit_count = 0
-    for query, true_relevant_doc, expected_content in labeled_queries:
+    for query, true_relevant_doc, expected_content in queries:
         results = vector_store.similarity_search(query, k=4)
         top4_docs = [os.path.basename(r.metadata['source']) for r in results]
         best_hit = true_relevant_doc == top4_docs[0]
@@ -31,8 +35,7 @@ def test_base_query_similarities(vector_store: FAISS):
         # Does the given context chunk of the document contain the expected information?
         content_hit = False
         if top4_hit:
-            expected_content in results[top4_docs.index(true_relevant_doc)].page_content
-            content_hit = True
+            content_hit = expected_content in results[top4_docs.index(true_relevant_doc)].page_content
         content_hit_count += content_hit
 
         print("{}: [{}] Korrektes Doc, [{}] Korrekt in Top 4, [{}] Korrekter page_content".format(

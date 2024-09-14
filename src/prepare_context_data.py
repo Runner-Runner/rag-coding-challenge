@@ -76,6 +76,7 @@ def create_pdf_db(context_data_dir, embedding_model_name):
     chunked_docs = splitter.split_documents(docs)
     embeddings = HuggingFaceEmbeddings(model_name=embedding_model_name)
 
+    # Normalize relevance scores? normalize_L2=True
     db = FAISS.from_documents(chunked_docs, embeddings)
     # retriever = db.as_retriever(search_type="similarity", search_kwargs={"k": 4})
     return db

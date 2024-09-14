@@ -70,6 +70,13 @@ Problems:
 	- Embeddings for German language not good enough?
 		- paraphrase-multilingual-MiniLM-L12-v2
 		- FAISS vectorization also tested with english version of PDF documents, no significant improvement
+	[] How do handle questions that need context from all docs?
+		- Ex. last given question: "Gebe mir alle Leuchtmittel mit mindestens 1500W und einer Lebensdauer von mehr als 3000 Stunden?"
+			- Even if splitting into small chunks like row-wise, need to give (document_count * 2) context chunks to LLM in this case
+			- Other questions don't want this much context
+			[] How to differentiate between these different context requirements? Check if relevancy score is evenly distributed? 
+				-> but must also meet threshold, otherwise no document is relevant
+	[] -> If I normalize L2 distances (to normalize relevance scores), results worsen.
 	[x] Try to split into sentence-wise chunks
 		- Improves retrieval results, seems to work well for non-running key-value-based text
 		<-> Obviously increases problem with vertically-paired tables
