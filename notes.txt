@@ -73,6 +73,8 @@ Problems:
 	[x] Try to split into sentence-wise chunks
 		- Improves retrieval results, seems to work well for non-running key-value-based text
 		<-> Obviously increases problem with vertically-paired tables
+		- Obviously splits up multi-row sentences, in this case those don't contain data that's as relevant
+			-> Could increase including higher number of relevant chunks during retrieval
 	[] Try (additional) naive TF-IDF similarity approach as baseline?
 
 Links:
