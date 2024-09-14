@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 from llama_cpp import Llama
 
@@ -24,7 +25,7 @@ class Timer:
         print(f"{self.process_name} - Laufzeit: {elapsed_time:0.4f} Sekunden")
 
 
-def run_rag():
+def run_rag(initial_query=None):
     model_name = 'llama-2-13b-german-assistant-v4.Q2_K.gguf'
     # model_name = 'llama-2-13b-german-assistant-v4.Q3_K_L.gguf'
     # model_name = 'llama-2-13b-german-assistant-v4.Q8_0.gguf'
@@ -37,12 +38,12 @@ def run_rag():
     model = Llama(model_path=model_path)
 
     vector_store = prepare_context_data.create_pdf_db(context_data_dir, embedding_model_name)
-    test.test_base_query_similarities(vector_store)
 
-    user_query = "Welche Leuchte hat SCIP Nummer dd2ddf15-037b-4473-8156-97498e721fb3?"
+    # test.test_extended_simple_queries(vector_store)
 
-    output = ask(model, vector_store, user_query)
-    print(output)
+    if initial_query:
+        output = ask(model, vector_store, initial_query)
+        print(output)
 
     while True:
         input_user_query = input("Frage: ")
@@ -66,7 +67,7 @@ def ask(model, db, user_query):
     product_name = " ".join(file_name.split('_')[2:])
     context = 'Produktdatenblatt {}: {}'.format(product_name, relevant_doc.page_content)
 
-    prompt_template = "{user_message} Nutze ausschließlich den folgenden Kontext für deine Antwort: \"{context}\""
+    prompt_template = "### User: {user_message} Nutze ausschließlich den folgenden Kontext für deine Antwort: \"{context}\"\n### Assistant:"
     prompt = prompt_template.format(user_message=user_query, context=context)
     print("Query-Format: \n{}".format(prompt))
 
@@ -77,4 +78,7 @@ def ask(model, db, user_query):
 
 
 if __name__ == '__main__':
-    run_rag()
+    initial_query = None
+    if len(sys.argv) == 2:
+        initial_query = sys.argv[1]
+    run_rag(initial_query)

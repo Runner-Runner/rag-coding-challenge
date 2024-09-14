@@ -109,6 +109,8 @@ def output_test_query_similarities(vector_store: FAISS, queries):
         content_hit = False
         page_content = ''
         if top4_hit:
+            # TODO Could be improved: only checks "most relevant" chunk for correct doc and ignores other chunks from
+            #  the same doc
             page_content = results[top4_docs.index(true_relevant_doc)].page_content
             content_hit = expected_content.lower() in page_content.lower()
             page_content = '(' + page_content + ')'
