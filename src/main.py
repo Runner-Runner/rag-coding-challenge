@@ -54,21 +54,28 @@ def run_rag(initial_query=None):
 
 
 def ask(model, db, user_query):
-    max_tokens = 200
+    max_tokens = 300
 
+    use_most_relevant_k = 4
     with Timer("Retrieval"):
-        relevant_docs = db.similarity_search(user_query)
+        relevant_docs = db.similarity_search(user_query, k=use_most_relevant_k)
 
     # TODO Maybe use the most relevant X contents?
-    relevant_doc = relevant_docs[0]
     # Add product name manually extracted from file name
     # Expect file name to contain product name after two _
-    file_name = os.path.splitext(os.path.basename(relevant_doc.metadata['source']))[0]
-    product_name = " ".join(file_name.split('_')[2:])
-    context = 'Produktdatenblatt {}: {}'.format(product_name, relevant_doc.page_content)
 
-    prompt_template = "### User: {user_message} Nutze ausschließlich den folgenden Kontext für deine Antwort: \"{context}\"\n### Assistant:"
-    prompt = prompt_template.format(user_message=user_query, context=context)
+    contexts = []
+    for i in range(use_most_relevant_k):
+        relevant_doc = relevant_docs[i]
+        file_name = os.path.splitext(os.path.basename(relevant_doc.metadata['source']))[0]
+        product_name = " ".join(file_name.split('_')[2:])
+        context = 'Produktdatenblatt {}: {}'.format(product_name, relevant_doc.page_content)
+        contexts.append(context)
+    full_context = '\n'.join(contexts)
+
+    prompt_template = ("### User: {user_message} Nutze ausschließlich den folgenden Kontext für deine Antwort: "
+                       "\"{context}\"\n### Assistant:")
+    prompt = prompt_template.format(user_message=user_query, context=full_context)
     print("Query-Format: \n{}".format(prompt))
 
     with Timer("Inferenz"):
