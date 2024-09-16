@@ -1,6 +1,6 @@
 Prerequisites:
 - python installed (tested with 3.12)
-- Download model: https://huggingface.co/TheBloke/Llama-2-13B-German-Assistant-v4-GGUF/blob/main/llama-2-13b-german-assistant-v4.Q2_K.gguf
+- Download model: https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/blob/main/mistral-7b-instruct-v0.2.Q5_K_M.gguf
 - Download pdf zip file
 
 Setup:

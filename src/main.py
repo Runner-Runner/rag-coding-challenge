@@ -26,10 +26,19 @@ class Timer:
 
 
 def run_rag(initial_query=None):
-    model_name = 'llama-2-13b-german-assistant-v4.Q2_K.gguf'
+    # model_name = 'llama-2-13b-german-assistant-v4.Q2_K.gguf'
     # model_name = 'llama-2-13b-german-assistant-v4.Q3_K_L.gguf'
     # model_name = 'llama-2-13b-german-assistant-v4.Q8_0.gguf'
+    # mistral: MUCH better answer quality and 3x as fast. Does not always answer in German
+    model_name = 'mistral-7b-instruct-v0.2.Q5_K_M.gguf'
     model_path = os.path.join('..', 'model', model_name)
+
+    prompt_template = ("### User: {user_message} Nutze den folgenden Kontext für deine Antwort: \n"
+                       "\"{context}\"\n### Assistant:")
+    if 'mistral' in model_name:
+        prompt_template = (
+            "<s>[INST] {user_message} Antworte auf deutsch. Nutze den folgenden Kontext für deine Antwort: \n"
+            "\"{context}\" [/INST]")
 
     context_data_dir = 'pdf'
     # embedding_model_name = 'danielheinz/e5-base-sts-en-de'
@@ -42,18 +51,18 @@ def run_rag(initial_query=None):
     # test.test_extended_simple_queries(vector_store)
 
     if initial_query:
-        output = ask(model, vector_store, initial_query)
+        output = ask(model, vector_store, initial_query, prompt_template)
         print(output)
 
     while True:
         input_user_query = input("Frage: ")
         if input_user_query == 'q':
             break
-        output = ask(model, vector_store, input_user_query)
+        output = ask(model, vector_store, input_user_query, prompt_template)
         print(output)
 
 
-def ask(model, db, user_query):
+def ask(model, db, user_query, prompt_template):
     max_tokens = 300
 
     use_most_relevant_k = 4
@@ -73,8 +82,6 @@ def ask(model, db, user_query):
         contexts.append(context)
     full_context = '\n'.join(contexts)
 
-    prompt_template = ("### User: {user_message} Nutze ausschließlich den folgenden Kontext für deine Antwort: "
-                       "\"{context}\"\n### Assistant:")
     prompt = prompt_template.format(user_message=user_query, context=full_context)
     print("Query-Format: \n{}".format(prompt))
 

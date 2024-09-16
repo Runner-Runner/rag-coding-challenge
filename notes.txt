@@ -62,6 +62,8 @@ Problems:
 		- llama-2-13b-german-assistant-v4.Q3_K_L.gguf
 		- llama-2-13b-german-assistant-v4.Q8_0.gguf
 	- Answer quality generally fluctuating strongly, maybe bad configuration.
+	-> mistral gguf model is much better! Even though it doesn't answer in German in some cases, it has less failures and is much faster.
+	- Q5 is recommended: https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/blob/main/mistral-7b-instruct-v0.2.Q5_K_M.gguf
 [] Retrieval using FAISS doesn't work well enough
 	- Doesn't return the relevant doc even for long unique identifiers (like 4008321299963)
 		- Not suited for small datasets??
